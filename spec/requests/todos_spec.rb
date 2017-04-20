@@ -1,23 +1,43 @@
 require 'rails_helper'
 
-RSpec.describe 'TODO API', type: :request do
+RSpec.describe 'Todos API', type: :request do
   # init test data
   let!(:todos) { create_list(:todo, 10) }
   let(:todo_id) { todos.first.id }
 
   # Test suite for GET /todos
   describe 'GET /todos' do
+    # make HTTP get request before each example
+    before { get '/todos' }
+
     it 'returns todos' do
       expect(json).not_to be_empty
-      expect(json).size eq(10)
+      expect(json.size).to eq(10)
     end
 
     it 'status code 200' do
       expect(response).to have_http_status(200)
     end
+  end
+
+  # Test suite for GET /todos/:id
+  describe 'GET /todos/:id' do
+    before { get "/todos/#{todo_id}" }
+
+    context 'when the record exists' do
+      it 'returns the todo' do
+        expect(json).not_to be_empty
+        expect(json['id']).to eq(todo_id)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
 
     context 'request todo not exist' do
-      let(:todo){ 100 }
+      let(:todo_id){ 100 }
 
       it 'return status code 404' do
         expect(response).to have_http_status(404)
