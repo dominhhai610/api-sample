@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'TODO API', type: :request do
   # init test data
   let!(:todos) { create_list(:todo, 10) }
-  let(todo_id) { todos.first.id }
+  let(:todo_id) { todos.first.id }
 
   # Test suite for GET /todos
   describe 'GET /todos' do
@@ -44,9 +44,7 @@ RSpec.describe 'TODO API', type: :request do
       it 'returns status 201' do
         expect(response).to have_http_status(201)
       end
-      end
     end
-
 
     context 'when the request is invalid' do
       before { post '/todos', params: { title: 'Foobar' } }
@@ -87,5 +85,4 @@ RSpec.describe 'TODO API', type: :request do
       expect(response).to have_http_status(204)
     end
   end
-
 end
